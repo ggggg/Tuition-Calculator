@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tuition Calculator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"
+  >
+  <script src="https://unpkg.com/vue@3"></script>
+  <style>
+      html, body {
+          height: 100vh;
+      }
+
+      @keyframes animation {
+          0% {
+              opacity: 0;
+              transform: translateY(-10px);
+          }
+          100% {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }
+
+      @-webkit-keyframes animation {
+          0% {
+              opacity: 0;
+              transform: translateY(-10px);
+          }
+          100% {
+              opacity: 1;
+              transform: translateY(0);
+          }
+      }
+
+      .dropdown {
+          animation: animation 1s ease-in both;
+      }
+  </style>
+</head>
+<body class="h-100">
+<div id="app" class="container h-100 text-white">
+  <div class="dropdown row align-middle align-items-center">
+    <div class="col-12 bg-primary">
+      <h1>Tuition Calculator</h1>
+      <h4>This Calculator Will Help you Figure Out how much you pay per Year</h4>
+      <form id="main-form">
+        <label for="uni">Choose a University:</label><br>
+        <select class="w-100" v-model="uni" id="uni" name="uni">
+          <option value=""></option>
+          <option v-for="uni in Object.keys(unis)" :key="uni" :value="uni">{{uni}}</option>
+        </select>
+        <label class="dropdown" v-if="uni" for="program">Choose a Program:</label><br>
+        <select v-if="uni" class="dropdown w-100" v-model="program" id="program" name="program">
+          <option value=""></option>
+          <option v-for="program in Object.keys(unis[uni].programs)" :key="program" :value="program">{{program}}
+          </option>
+        </select><br>
+        <label class="dropdown" v-if="uni" for="books">Buying new Books?</label>
+        <input class="dropdown" v-if="uni" v-model="books" type="checkbox" id="books"
+               name="books" value="false"
+        >
+        <br>
+        <label class="dropdown" v-if="uni" for="international">International student?</label>
+        <input class="dropdown" v-if="uni" v-model="international" type="checkbox" id="international"
+               name="international" value="false"
+        >
+        <br>
+        <label class="dropdown" v-if="uni" for="res">Living on Residence?</label>
+        <input class="dropdown" v-if="uni" v-model="res" type="checkbox" id="res" name="res" value="false">
+        <br>
+        <label class="dropdown" v-if="unis[uni]?.meal" for="meal">Meal Plan?</label>
+        <input class="dropdown" v-if="unis[uni]?.meal" v-model="meal" type="checkbox" id="meal" name="meal"
+               value="false"
+        >
+
+      </form>
+      <br>
+      <div id="result" class="w-100 text-center mb-5">
+        <span class="border-danger border border-5 p-3 px-5">
+        The price per a year will be ${{price}}
+          </span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const unis = {
+    'UTSG': {
+      programs: {
+        'Applied Science and Engineering': {
+          international: 63500,
+          base: 14180
+        },
+        'Architecture': {
+          international: 57070,
+          base: 6100
+        },
+        'Commerce': {
+          international: 69780,
+          base: 15900
+        },
+        'Computer Science': {
+          international: 60150,
+          base: 11420
+        },
+        'Data Science': {
+          international: 60510,
+          base: 11420
+        },
+        'Law Juris Doctor': {
+          international: 62880,
+          base: 33040
+        },
+        'Doctor of Medicine': {
+          international: 91760,
+          base: 23090
+        },
+        'Doctor of Dental Surgery': {
+          international: 127480,
+          base: 37080
+        },
+        'Bachelor of Science in Nursing': {
+          international: 46310,
+          base: 8190
+        },
+        'Bioinformatics': {
+          international: 60510,
+          base: 11420
+        },
+      },
+      res: 7000,
+      books: 500
+    },
+    'University of Waterloo': {
+      programs: {
+        'Faculties of Arts, Environment, Health, Mathematics, and Science': {
+          international: 42500,
+          base: 8000
+        },
+        'Faculty of Engineering': {
+          international: 63000,
+          base: 16000
+        },
+        'Business Administration and Mathematics Double Degree': {
+          international: 47500,
+          base: 12000
+        },
+        'Accounting and Financial Management': {
+          international: 43000,
+          base: 8000
+        },
+        'Archetecture': {
+          international: 61000,
+          base: 12000
+        },
+        'Computer Science': {
+          international: 63000,
+          base: 15000
+        },
+        'Computing and Financial Management': {
+          international: 48000,
+          base: 8000
+        },
+        'Global Business and Digital Arts': {
+          international: 46000,
+          base: 14000
+        },
+        'Mathematics/Financial Analysis and Risk Management': {
+          international: 47500,
+          base: 12000
+        }
+      },
+      res: 10490,
+      books: 2100,
+      meal: 6000
+    },
+    'York University': {
+      programs: {
+        'Design': {
+          international: 30349,
+          base: 10020
+        },
+        'Business': {
+          international: 33961,
+          base: 9619
+        },
+        'Commerce': {
+          international: 34628,
+          base: 9705
+        },
+        'Computer Science': {
+          international: 29958,
+          base: 9653
+        },
+        'Engineering': {
+          international: 37345,
+          base: 10608
+        },
+        'Schulich School Of Business': {
+          international: 29469,
+          base: 10605
+        }
+      },
+      res: 7512,
+      books: 1900,
+      meal: 4125
+    },
+    'Toronto Metropolitian Univeristy': {
+      programs: {
+        'Arts': {
+          international: 31814,
+          base: 7075
+        },
+        'Engineering and Archetectural Science': {
+          international: 32394,
+          base: 10679
+        },
+        'Science': {
+          international: 31871,
+          base: 8300
+        },
+        'Ted Rogers School of Management': {
+          international: 35453,
+          base: 9456
+        },
+        'The Creative School': {
+          international: 31841,
+          base: 7632
+        },
+      },
+      res: 10300,
+      books: 960,
+      meal: 6262
+    },
+    'UTSC': {
+      programs: {
+        'Computer Science': {
+          international: 58160,
+          base: 6100
+        },
+        'Management': {
+          international: 58160,
+          base: 6100
+        },
+        'Applied Science and Engineering': {
+          international: 63500,
+          base: 14180
+        },
+        'Architecture': {
+          international: 57070,
+          base: 6100
+        },
+        'Commerce': {
+          international: 69780,
+          base: 15900
+        },
+        'Data Science': {
+          international: 60510,
+          base: 11420
+        },
+        'Law Juris Doctor': {
+          international: 62880,
+          base: 33040
+        },
+        'Doctor of Medicine': {
+          international: 91760,
+          base: 23090
+        },
+        'Doctor of Dental Surgery': {
+          international: 127480,
+          base: 37080
+        },
+        'Bachelor of Science in Nursing': {
+          international: 46310,
+          base: 8190
+        },
+        'Bioinformatics': {
+          international: 60510,
+          base: 11420
+        },
+      },
+      res: 8872,
+      books: 1500,
+      meal: 5788
+    },
+    'UBC': {
+      programs: {
+        'Applied Science': {
+          international: 54986,
+          base: 7065
+        },
+        'Arts': {
+          international: 42802,
+          base: 5729
+        },
+        'Commerce': {
+          international: 55384,
+          base: 5729
+        },
+        'Computer Science': {
+          international: 44091,
+          base: 8489
+        },
+        'Dental Hygiene': {
+          international: 48500,
+          base: 6302
+        },
+        'Design in Architecture and Landscape': {
+          international: 42694,
+          base: 9232
+        },
+        'Environmental Design': {
+          international: 42883,
+          base: 5729
+        },
+        'International Economics': {
+          international: 51778,
+          base: 9166
+        },
+        'Nursing': {
+          international: 42883,
+          base: 5729
+        },
+        'Science': {
+          international: 44091,
+          base: 5729
+        },
+        'Pharmaceutical Science': {
+          international: 44091,
+          base: 5729
+        },
+      },
+      res: 11843,
+      books: 600,
+      meal: 6497
+    },
+  };
+
+  const { createApp } = Vue;
+
+  createApp({
+    watch: {
+      uni () {
+        this.program = '';
+        this.res = false;
+        this.books = false;
+        this.meal = false;
+      }
+    },
+    computed: {
+      price () {
+        let price = 0;
+        const uni = unis[this.uni];
+        const program = uni?.programs[this.program];
+        if (!program) {
+          return price;
+        }
+        price += this.international && program.international ? program.international : program.base;
+        price += this.books && uni.books ? uni.books : 0;
+        price += this.res && uni.res ? uni.res : 0;
+        price += this.meal && uni.meal ? uni.meal : 0;
+        return price;
+      }
+    },
+    data () {
+      return {
+        uni: '',
+        program: '',
+        res: false,
+        books: false,
+        meal: false,
+        international: false,
+        unis
+      };
+    }
+  })
+    .mount('#app');
+</script>
+</body>
+</html>
