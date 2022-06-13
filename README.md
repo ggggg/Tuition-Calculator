@@ -1,4 +1,4 @@
-# hackthon2022
+# Tuition Calculator
  This is our submission for the 2022 onehacks hackthon (By Ido and Joe)
 
 ## Inspiration
